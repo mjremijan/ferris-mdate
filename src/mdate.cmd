@@ -14,7 +14,7 @@ echo    Mp4 Date And Title Editor
 echo.
 
 REM Exit if not at least 1 parameter
-if [%1] == [] goto help
+if [%1] == [] goto helpdone
 
 REM Check if 1st parameter is for printing help
 if [%1]==[--title] goto title
@@ -22,9 +22,29 @@ if [%1]==[--title] goto title
 REM Check if 1st parameter is for printing help
 if [%1]==[--help] goto help
 
+REM Check if 1st parameter is for processing a directory
+if [%1]==[--dir] (goto processdir) else (goto processfile)
+
+
+:processdir
+echo -- Processing directory %2
+
+for %%A in (.\*.mp4) do (    
+    call :processing "%%~nxA"
+)
+goto done
+
+
+:processfile
+call :processing %1
+goto done
+
+
+:processing
 REM set filename
 echo -- Setting filename & echo.
 set filename=%1
+REM set filename=%filename:"=%
 echo filename='%filename%'
 echo.
 
@@ -141,13 +161,26 @@ exiftool "-*Date=%year%:%month%:%day% %hour%:%minute%:00-05:00" -api QuickTimeUT
 echo. & echo -- Running nircmd... & echo.
 nircmd setfiletime %filename% "%day%-%month%-%year% %hour%:%minute%:00" "%day%-%month%-%year% %hour%:%minute%:00" 
 
-goto done
+exit /b
+
+:helpdone
+call :help
+call :done
+goto:eof
 
 :help
 echo Usage
 echo.
-echo    mdate.cmd "Name of your video file (yyyy-mm-dd hh.mm).mp4"
+echo    mdate.cmd --title  // Print the title of the application
 echo.
+echo    mdate.cmd --help   // Print the help
+echo.
+echo    mdate.cmd --dir  // All (*.mp4) files in current directory
+echo.
+echo    mdate.cmd "Video file (yyyy-mm-dd hh.mm).mp4"  // This file in current directory
+echo.
+
+exit /b
 
 :done
 echo.
@@ -157,6 +190,8 @@ echo  / _` ^|/ _ \^| '_ \ / _ \
 echo ^| (_^| ^| (_) ^| ^| ^| ^|  __/
 echo  \__,_^|\___/^|_^| ^|_^|\___^|
 echo.
+
+exit /b
 
 :title
 echo.
