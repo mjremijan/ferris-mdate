@@ -14,4 +14,4 @@ set PATH=%nircmd_home%\bin;%PATH%
 
 D:
 @Echo off
-cmd.exe /K "doskey ls=dir & cd D:\Videos\Home Videos\2019 & mdate --title"
+cmd.exe /K "doskey ls=dir & cd D:\Videos\Home Videos\2020 & explorer.exe . & mdate --title"
