@@ -159,7 +159,22 @@ rem exiftool "-*Date=%year%:%month%:%day% %hour%:%minute%:00-05:00" -overwrite_o
 exiftool "-*Date=%year%:%month%:%day% %hour%:%minute%:00-05:00" -api QuickTimeUTC -overwrite_original -wm w %filename%
 
 echo. & echo -- Running nircmd... & echo.
-nircmd setfiletime %filename% "%day%-%month%-%year% %hour%:%minute%:00" "%day%-%month%-%year% %hour%:%minute%:00" 
+if %hour% LSS 10 (
+    set hourpadded=0%hour%
+) else (
+    set hourpadded=%hour%
+)
+echo hourpadded=%hourpadded%
+
+
+if %minute% LSS 10 (
+    set minutepadded=0%minute%
+) else (
+    set minutepadded=%minute%
+)
+echo minutepadded=%minutepadded%
+
+nircmd setfiletime %filename% "%day%-%month%-%year% %hourpadded%:%minutepadded%:00" "%day%-%month%-%year% %hourpadded%:%minutepadded%:00" 
 
 exit /b
 
