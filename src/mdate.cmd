@@ -1,5 +1,5 @@
 @Echo off
-setlocal enabledelayedexpansion
+setlocal EnableDelayedExpansion
 
 REM http://patorjk.com/software/taag/#p=display&f=Ogre&t=exif
 
@@ -27,24 +27,34 @@ if [%1]==[--dir] (goto processdir) else (goto processfile)
 
 
 :processdir
-echo -- Processing directory %2
-
-for %%A in (.\*.mp4) do (    
-    call :processing "%%~nxA"
+echo -- Processing current directory & echo.
+for /f "tokens=*" %%f in ('dir /b .\*.mp4') do (
+	call :processing "%%~nxf"
 )
 goto done
+
+REM echo --- Build array of MP4 filenames
+REM set "idx=-1"
+REM for %%f in (.\*.mp4) do ( 
+REM 	echo "%%f"
+REM 	set /A "idx=!idx!+1"	
+REM 	set files[!idx!]="%%~nxf"
+REM )
+REM for /L %%x in (0,1,%idx%) do (
+REM 	echo  
+REM 	call :processing !files[%%x]!
+REM )
+REM goto done
 
 
 :processfile
 call :processing %1
 goto done
 
-
 :processing
 REM set filename
-echo -- Setting filename & echo.
+echo -- Processing file & echo.
 set filename=%1
-REM set filename=%filename:"=%
 echo filename='%filename%'
 echo.
 
@@ -155,7 +165,6 @@ echo -- Running ffmpeg... & echo.
 ffmpeg -i %filename%_original -metadata Title="%description% (%year%-%month%-%day%)" -map_metadata 0 -codec copy %filename%
 
 echo. & echo -- Running exiftool... & echo.
-rem exiftool "-*Date=%year%:%month%:%day% %hour%:%minute%:00-05:00" -overwrite_original -wm w %filename%
 exiftool "-*Date=%year%:%month%:%day% %hour%:%minute%:00-05:00" -api QuickTimeUTC -overwrite_original -wm w %filename%
 
 echo. & echo -- Running nircmd... & echo.
