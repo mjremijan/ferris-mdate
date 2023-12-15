@@ -143,14 +143,18 @@ for /f "tokens=1,2 delims=." %%a in (%inn%) do (
   set hour=%%a
   set minute=%%b
 )
-echo hour='%hour%'
+echo hour 1='%hour%'
+set /a hour=10000%hour% %% 10000
+echo hour 2='%hour%'
 if [%hour%] == [] (
 	echo ERROR^^!^^! could not determine hour 
 	echo.
 	goto help
 )
 
-echo minute='%minute%'
+echo minute 1='%minute%'
+set /a minute=10000%minute% %% 10000
+echo minute 2='%minute%'
 if [%minute%] == [] (
 	echo ERROR^^!^^! could not determine minute 
 	echo.
@@ -183,7 +187,8 @@ if %minute% LSS 10 (
 )
 echo minutepadded=%minutepadded%
 
-nircmd setfiletime %filename% "%day%-%month%-%year% %hourpadded%:%minutepadded%:00" "%day%-%month%-%year% %hourpadded%:%minutepadded%:00" 
+echo nircmd setfiletime %filename% "%day%-%month%-%year% %hourpadded%:%minutepadded%:00" "%day%-%month%-%year% %hourpadded%:%minutepadded%:00" "%day%-%month%-%year% %hourpadded%:%minutepadded%:00"
+nircmd setfiletime %filename% "%day%-%month%-%year% %hourpadded%:%minutepadded%:00" "%day%-%month%-%year% %hourpadded%:%minutepadded%:00" "%day%-%month%-%year% %hourpadded%:%minutepadded%:00" 
 
 exit /b
 
