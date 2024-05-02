@@ -1,5 +1,5 @@
 @Echo off
-setlocal EnableDelayedExpansion
+REM setlocal EnableDelayedExpansion
 
 REM http://patorjk.com/software/taag/#p=display&f=Ogre&t=exif
 
